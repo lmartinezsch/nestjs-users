@@ -50,11 +50,9 @@ export class UsersService {
     profile.name = bodyReq.name;
     profile.user = newUserEntity;
     profile.address = newAddressEntity;
-    return await this.profilesRepository.save(profile);
+    await this.profilesRepository.save(profile);
 
-    //await this.usersRepository.save(createUserDto);
-
-    //return plainToClass(ReadUserDto, createUserDto);
+    return;
   }
   /*
   async findAll(): Promise<ReadUserDto[]> {

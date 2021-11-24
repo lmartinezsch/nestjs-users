@@ -6,6 +6,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Profile } from '.';
+import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class User {
@@ -21,7 +22,8 @@ export class User {
   @OneToOne(() => Profile, (profile) => profile.user)
   profile: Profile;
 
-  /*@BeforeInsert() async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }*/
+  @BeforeInsert() async hashPassword() {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }

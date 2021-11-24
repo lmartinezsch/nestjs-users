@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { SETTINGS } from 'src/app.utils';
 import { CreateUserDto, UpdateUserDto } from 'src/dtos/users';
 import { UsersService } from 'src/services/users/users.service';
 
@@ -14,8 +15,8 @@ import { UsersService } from 'src/services/users/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @Post('/register')
+  create(@Body(SETTINGS.VALIDATION_PIPE) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
   /*

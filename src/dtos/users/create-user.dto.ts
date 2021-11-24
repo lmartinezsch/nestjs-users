@@ -5,8 +5,10 @@ import {
   IsString,
   MaxLength,
   IsNotEmpty,
-  MinLength,
+  Length,
+  Matches,
 } from 'class-validator';
+import { MESSAGE, REGEX } from 'src/app.utils';
 
 @Exclude()
 export class CreateUserDto {
@@ -18,8 +20,10 @@ export class CreateUserDto {
 
   @Expose()
   @IsString()
-  @MinLength(8)
-  @MaxLength(50, { message: 'This password is not valid' })
+  @Length(8, 24)
+  @Matches(REGEX.PASSWORD_RULE, {
+    message: MESSAGE.PASSWORD_RULE_MESSAGE,
+  })
   @IsNotEmpty()
   readonly password: string;
 
