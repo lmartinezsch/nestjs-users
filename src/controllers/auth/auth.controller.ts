@@ -8,26 +8,26 @@ import {
   Delete,
 } from '@nestjs/common';
 import { SETTINGS } from 'src/app.utils';
-import { CreateUserDto, UpdateUserDto } from 'src/dtos/users';
-import { UsersService } from 'src/services/users/users.service';
+import { CreateUserDto } from 'src/dtos/users';
+import { AuthService } from 'src/services/auth/auth.service';
 
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
   create(@Body(SETTINGS.VALIDATION_PIPE) createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.authService.create(createUserDto);
   }
   /*
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.authService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.authService.findOne(+id);
   }
 
   @Patch(':id')
@@ -35,11 +35,11 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateUserDto: Partial<UpdateUserDto>,
   ) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.authService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.authService.remove(+id);
   }*/
 }
