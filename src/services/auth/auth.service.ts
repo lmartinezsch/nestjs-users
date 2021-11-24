@@ -1,13 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass } from 'class-transformer';
-import { CreateUserDto, ReadUserDto } from 'src/dtos/users';
+import { CreateUserDto, ReadUserDto, AuthCredentialDto } from 'src/dtos/auth';
 import { User, Profile, Address, City } from 'src/entities';
-import { createConnection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +17,7 @@ export class AuthService {
     private cityRepository: Repository<City>,
   ) {}
 
-  async create(bodyReq: Partial<CreateUserDto>) {
+  async register(bodyReq: Partial<CreateUserDto>) {
     const userExist: User = await this.usersRepository.findOne({
       where: { username: bodyReq.username },
     });
@@ -53,6 +48,21 @@ export class AuthService {
     await this.profilesRepository.save(profile);
 
     return;
+  }
+
+  async login(authCredential: Partial<AuthCredentialDto>) {
+    const { username, password } = authCredential;
+    const userFound: User = await this.usersRepository.findOne({ username });
+
+    if (!userFound) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
+    if (userFound && !(await userFound.validatePassword(password))) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
+    return 'bien';
   }
   /*
   async findAll(): Promise<ReadUserDto[]> {

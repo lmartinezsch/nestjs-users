@@ -6,9 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { SETTINGS } from 'src/app.utils';
-import { CreateUserDto } from 'src/dtos/users';
+import { AuthCredentialDto, CreateUserDto } from 'src/dtos/auth';
 import { AuthService } from 'src/services/auth/auth.service';
 
 @Controller('auth')
@@ -16,8 +17,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
-  create(@Body(SETTINGS.VALIDATION_PIPE) createUserDto: CreateUserDto) {
-    return this.authService.create(createUserDto);
+  register(@Body(SETTINGS.VALIDATION_PIPE) createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
+  }
+
+  @Post('/login')
+  @HttpCode(200)
+  login(@Body() authCredentialDto: AuthCredentialDto) {
+    return this.authService.login(authCredentialDto);
   }
   /*
   @Get()
