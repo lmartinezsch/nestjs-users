@@ -17,7 +17,7 @@ export class Address {
   street: string;
 
   @ManyToOne(() => City, (city) => city.addresses)
-  @JoinTable({ name: 'cities' })
+  @JoinTable()
   city: City;
 
   @OneToOne(() => Profile, (profile) => profile.address)

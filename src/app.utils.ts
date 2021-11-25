@@ -21,3 +21,7 @@ export const MESSAGE = {
 export const SETTINGS = {
   VALIDATION_PIPE,
 };
+
+export const jwtConstants = {
+  secret: 'secretKey',
+};

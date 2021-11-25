@@ -17,7 +17,7 @@ export class City {
   name: string;
 
   @ManyToOne(() => Country, (country) => country.cities)
-  @JoinTable({ name: 'country' })
+  @JoinTable()
   country: Country;
 
   @OneToMany(() => Address, (address) => address.city)
