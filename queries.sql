@@ -1,3 +1,14 @@
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'insert into countries set name = "Argentina", iso3 = "ARG", iso2 = "AR";'
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'insert into cities set name = "Buenos Aires", countryId = (select id from countries where iso3 = "ARG");'
+
+
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'select * from countries;'
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'select * from cities;'
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'select * from users;'
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'set foreign_key_checks = 0;truncate users;truncate profiles;truncate addresses;set foreign_key_checks = 1;'
+
+
+
 INSERT INTO `countries` (`iso3`, `name`, `iso2`)
 VALUES
 ('AFG','Afghanistan','AF'),
@@ -253,3 +264,5 @@ VALUES
 
 
 insert into cities set name = "Buenos Aires", countryId = 11;
+
+insert into countries set name = "Argentina";
