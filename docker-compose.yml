@@ -1,49 +1,43 @@
-version: '3.7'
-
+version: '3.8'
 services:
-  #proxy:
-  #  image: nginx:alpine
-  #  restart: always
-  #  ports:
-  #    - 80:80
-  #  links:
-  #    - nest
-  #  volumes:
-  #    - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  #  command: [nginx-debug, '-g', 'daemon off;']
-
-  nest:
-    image: kyhsa93/nestjs-rest-cqrs-example
-    restart: always
-    env_file:
-      - .env
-    links:
-      - database
-
-  redis-master:
-    image: kyhsa93/redis-master
-    restart: always
-
-  redis-slave:
-    image: kyhsa93/redis-slave
-    restart: always
-
-  database:
-    image: mysql:5.7
-    restart: always
+  api:
+    container_name: myapp_api
+    # image: thomas-oliver/nestjs-dockerized
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - MYSQL_DATABASE=users_api
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=myapp
+      - MYSQL_PASSWORD=myapp
     ports:
-      - 3306:3306
-    env_file:
-      - .env
-    volumes:
-      - ~/database/nest:/var/lib/mysql
+      - '5000:3000'
+    links:
+      - mysql
+    depends_on:
+      - mysql
 
-  #rabbitmq:
-  #  image: rabbitmq:alpine
-  #  restart: always
-  #  ports:
-  #    - 5672:5672
-  #    - 15672:15672
-  #  environment:
-  #    RABBITMQ_DEFAULT_USER: root
-  #    RABBITMQ_DEFAULT_PASS: test
+  mysql: # Example Service
+    container_name: myapp_mysql
+    restart: always
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=users_api
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=myapp
+      - MYSQL_PASSWORD=myapp
+    ports:
+      - '3309:3306'
+    expose:
+      - '3309'
+    volumes:
+      - my-db:/var/lib/mysql
+
+volumes:
+  my-db:
+
+networks:
+  default:
+    external:
+      name: myapp
