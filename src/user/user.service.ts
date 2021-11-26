@@ -31,7 +31,6 @@ export class UserService {
     const user: User = new User();
     user.username = bodyReq.username;
     user.password = bodyReq.password;
-    const newUserEntity = await this.userRepository.save(user);
 
     const cityEntity: City = await this.cityRepository.findOne(bodyReq.cityId);
 
@@ -41,6 +40,8 @@ export class UserService {
     const address = new Address();
     address.street = bodyReq.address;
     address.city = cityEntity;
+
+    const newUserEntity = await this.userRepository.save(user);
     const newAddressEntity = await this.addressRepository.save(address);
 
     const profile: Profile = new Profile();

@@ -15,8 +15,10 @@ services:
       - '5000:3000'
     links:
       - mysql
+      - redis
     depends_on:
       - mysql
+      - redis
 
   mysql: # Example Service
     container_name: myapp_mysql
@@ -32,10 +34,19 @@ services:
     expose:
       - '3309'
     volumes:
-      - my-db:/var/lib/mysql
+      - myapp_mysql_data:/var/lib/mysql
+  redis: # Example Service
+    container_name: myapp_redis
+    restart: always
+    image: redis:6.0-alpine
+    expose:
+      - '6379'
+    volumes:
+      - myapp_redis_data:/data
 
 volumes:
-  my-db:
+  myapp_mysql_data:
+  myapp_redis_data:
 
 networks:
   default:
