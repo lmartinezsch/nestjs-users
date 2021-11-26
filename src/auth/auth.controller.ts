@@ -1,18 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  HttpCode,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { SETTINGS } from 'src/app.utils';
 import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LoginResponse } from './interfaces/login-response';
 
 @Controller('auth')
 export class AuthController {
@@ -22,22 +14,20 @@ export class AuthController {
   ) {}
 
   @Post('/register')
-  register(@Body(SETTINGS.VALIDATION_PIPE) createUserDto: CreateUserDto) {
+  register(
+    @Body(SETTINGS.VALIDATION_PIPE) createUserDto: CreateUserDto,
+  ): Promise<void> {
     return this.userService.create(createUserDto);
   }
 
   @Post('/login')
   @HttpCode(200)
-  async login(@Body() authCredentialDto: AuthCredentialDto) {
+  async login(
+    @Body() authCredentialDto: AuthCredentialDto,
+  ): Promise<LoginResponse> {
     const userFound = await this.userService.findOneByCredentials(
       authCredentialDto,
     );
     return this.authService.login(userFound);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('/profile')
-  profile(@Request() req) {
-    return req.user;
   }
 }

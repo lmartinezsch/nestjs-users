@@ -1,15 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, Profile, Address, City } from './entities';
-import { getConnection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AuthCredentialDto } from 'src/auth/dto/auth-credential.dto';
-import { ProfileUserDto } from './dto/profile-user.dto';
-import { plainToClass } from 'class-transformer';
+import { ProfileResponse } from './interfaces/profile-response';
 
 @Injectable()
 export class UserService {
@@ -24,7 +19,7 @@ export class UserService {
     private cityRepository: Repository<City>,
   ) {}
 
-  async create(bodyReq: CreateUserDto) {
+  async create(bodyReq: CreateUserDto): Promise<void> {
     const userExist: User = await this.userRepository.findOne({
       where: { username: bodyReq.username },
     });
@@ -57,7 +52,9 @@ export class UserService {
     return;
   }
 
-  async findOneByCredentials(authCredentialDto: AuthCredentialDto) {
+  async findOneByCredentials(
+    authCredentialDto: AuthCredentialDto,
+  ): Promise<User> {
     const { username, password } = authCredentialDto;
     const userFound: User = await this.userRepository.findOne({ username });
 
@@ -72,7 +69,7 @@ export class UserService {
     return userFound;
   }
 
-  async profile(user: any) {
+  async profile(user: any): Promise<ProfileResponse> {
     const userProfile = await this.userRepository
       .createQueryBuilder('user')
       .select('user.id', 'id')
@@ -88,7 +85,7 @@ export class UserService {
       .printSql()
       .getRawOne();
 
-    const response = {
+    const response: ProfileResponse = {
       id: userProfile.id,
       name: userProfile.name,
       address: {
