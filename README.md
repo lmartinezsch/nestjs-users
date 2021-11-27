@@ -2,7 +2,7 @@
 
 ## Description
 
-this repository is a challenge made for The Lucky APP
+This repository is a challenge made for The Lucky APP
 
 ## Getting started
 
@@ -16,9 +16,7 @@ So you have to get node.js environment, redis for cache, mysql for database, kno
 
 Please install node.js and I recommend to use docker for your database.
 
-My recommand node.js version is dubnium and latest docker version.
-
-- Install node.js: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
+- Install Docker Destop for Linux: [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
 
 - Install Docker Desktop for MAC: [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
 
@@ -28,8 +26,9 @@ My recommand node.js version is dubnium and latest docker version.
 
 ## Installation
 
+Clone the repository in your projects folder and run the project with docker-compose
+
 ```bash
-# Clone the repository in your projects folder and run the project with docker-compose
 $ git clone git@github.com:lmartinezsch/nestjs-users.git
 ```
 
@@ -40,10 +39,11 @@ $ cd nestjs-users
 $ docker-compose up -d --build
 ```
 
-## Inserting data in the database
+## Inserting relevant information into the database
+
+Excecute this commands for insert a country and a city
 
 ```bash
-# Excecute this commands for insert a country and a city
 docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'insert into countries set name = "Argentina", iso3 = "ARG", iso2 = "AR";'
 docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'insert into cities set name = "Buenos Aires", countryId = (select id from countries where iso3 = "ARG");'
 ```
@@ -106,8 +106,7 @@ The REST API to the app is described below.
 `GET /users/profile`
 
     curl --location --request GET 'http://localhost:5000/api/v1/users/profile' \
-
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlYW5kcm8ubWFydGluZXowMUBnbWFpbC5jb20iLCJzdWIiOjEsImlhdCI6MTYzNzk2MjIzNiwiZXhwIjoxNjM4MDQ4NjM2fQ.PV1W1BHSr-fHzYOVJUaPJXlYJ3cZX2slzI2kPyL63uE'
+    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlYW5kcm8ubWFydGluZXowMUBnbWFpbC5jb20iLCJzdWIiOjEsImlhdCI6MTYzNzk2MjIzNiwiZXhwIjoxNjM4MDQ4NjM2fQ.PV1W1BHSr-fHzYOVJUaPJXlYJ3cZX2slzI2kPyL63uE'
 
 ### Response
 
