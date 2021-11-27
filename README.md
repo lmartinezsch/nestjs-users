@@ -1,73 +1,124 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# NestJs API User Authentication
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+this repository is a challenge made for The Lucky APP
+
+## Getting started
+
+This is REST api made by node.js, nest, redis, mysql with typescript.
+
+So you have to get node.js environment, redis for cache, mysql for database, know typescript syntax.
+
+### Prerequisites
+
+---
+
+Please install node.js and I recommend to use docker for your database.
+
+My recommand node.js version is dubnium and latest docker version.
+
+- Install node.js: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
+
+- Install Docker Desktop for MAC: [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
+
+- Install Docker Desktop for Windows: [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/)
+
+- Install compose: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
 
 ## Installation
 
 ```bash
-$ npm install
+# Clone the repository in your projects folder and run the project with docker-compose
+$ git clone git@github.com:lmartinezsch/nestjs-users.git
 ```
 
 ## Running the app
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ cd nestjs-users
+$ docker-compose up -d --build
 ```
 
-## Test
+## Inserting data in the database
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Excecute this commands for insert a country and a city
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'insert into countries set name = "Argentina", iso3 = "ARG", iso2 = "AR";'
+docker exec -i myapp_mysql mysql -umyapp -pmyapp users_api   <<< 'insert into cities set name = "Buenos Aires", countryId = (select id from countries where iso3 = "ARG");'
 ```
 
-## Support
+## Running the app
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+$ cd nestjs-users
+$ docker-compose up -d --build
+```
 
-## Stay in touch
+# REST API
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+The REST API to the app is described below.
 
-## License
+## Create a new User
 
-Nest is [MIT licensed](LICENSE).
+### Request
+
+`POST /auth/register`
+
+    curl --location --request POST 'http://localhost:5000/api/v1/auth/register' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "username": "leandro.martinez01@gmail.com",
+        "password": "TheLuckyApp2021!",
+        "name": "Leandro",
+        "address": "Calle falsa 123",
+        "cityId": 1
+    }'
+
+### Response
+
+    HTTP/1.1 201 Created
+
+## Login User
+
+### Request
+
+`POST /auth/login`
+
+    curl --location --request POST 'http://localhost:5000/api/v1/auth/login' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "username": "leandro.martinez01@gmail.com",
+        "password": "TheLuckyApp2021!"
+    }'
+
+### Response
+
+    HTTP/1.1 200 OK
+    {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlYW5kcm8ubWFydGluZXowM0BnbWFpbC5jb20iLCJzdWIiOjIsImlhdCI6MTYzNzk3MDkyMCwiZXhwIjoxNjM4MDU3MzIwfQ.KQ0exM4P1hSt3wNGd9fdENbYz-frZGUNY24sjXiBd4A"
+    }
+
+## Get user profile
+
+### Request
+
+`GET /users/profile`
+
+    curl --location --request GET 'http://localhost:5000/api/v1/users/profile' \
+
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlYW5kcm8ubWFydGluZXowMUBnbWFpbC5jb20iLCJzdWIiOjEsImlhdCI6MTYzNzk2MjIzNiwiZXhwIjoxNjM4MDQ4NjM2fQ.PV1W1BHSr-fHzYOVJUaPJXlYJ3cZX2slzI2kPyL63uE'
+
+### Response
+
+    HTTP/1.1 200 OK
+    {
+    "id": 1,
+    "name": "Leandro",
+    "address": {
+        "street": "Calle falsa 123",
+        "city": "Buenos Aires",
+        "country": "Argentina"
+    }
+
+}
