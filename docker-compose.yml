@@ -39,6 +39,8 @@ services:
     container_name: myapp_redis
     restart: always
     image: redis:6.0-alpine
+    ports:
+      - '6379:6379'
     expose:
       - '6379'
     volumes:
