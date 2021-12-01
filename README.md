@@ -121,3 +121,9 @@ The REST API to the app is described below.
     }
 
 }
+
+
+# Redis
+
+To check the data in redis you can use this command:  
+`docker exec -it myapp_redis redis-cli`
